@@ -1,6 +1,14 @@
 {
   "name": "datematrix",
   "version": "1.0.0",
+  "description": "generated date matrix",
+  "keywords": [
+    "datematrix",
+    "date-matrix",
+    "lunar calendar",
+    "china lunar calendar",
+    "农历"
+  ],
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -16,7 +24,7 @@
   },
   "scripts": {
     "build": "unbuild",
-    "prepublish": "rimraf dist && npm run unbuild"
+    "prepublish": "rimraf dist && unbuild"
   },
   "devDependencies": {
     "rimraf": "3.0.2",

@@ -59,6 +59,6 @@ export interface IDateItem {
   date: number
   inOtherMonth: boolean
   dateStr: string
-  lunarInfo: ILunarInfo,
+  lunarInfo?: ILunarInfo
 }
 

@@ -46,7 +46,6 @@ function getMonthDaysArr(year: number, month: number): IDateItem[][] {
       date,
       inOtherMonth: false,
       dateStr: `${year}-${month}-${date}`,
-      lunarInfo: getLunarInfo(year, month, date),
     }
 
     if (curDateDay === 6) {

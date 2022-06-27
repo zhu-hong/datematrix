@@ -87,7 +87,16 @@ function getNextMonthFillDays(year: number, month: number, length: number, week_
   }).slice(0, length).reverse()
 }
 
+function verifyDate(year: number, month: number): boolean {
+  if (year < 1990 || year > 2100) return false
+  if (month < 1 || month > 12) return false
+
+  return true
+}
+
 export function getMonthDayMatrix(year: number, month: number, week_startday_use_monday: boolean = false): IDateItem[][] {
+  if(!verifyDate(year, month)) throw Error('this date is not validate')
+
   const daysArr = getMonthDaysArr(year, month, week_startday_use_monday)
 
   let beforeEmptyLength = -1

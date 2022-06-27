@@ -156,7 +156,7 @@ const traditional_festival: Record<string, string> = {
 /**
  * 验证日期
  */
-export function verifyDate(year: number, month: number, date: number): boolean {
+function verifyDate(year: number, month: number, date: number): boolean {
   if (year < 1990 || year > 2100) return false
   if (month < 1 || month > 12) return false
   if (date < 1 || date > 31) return false

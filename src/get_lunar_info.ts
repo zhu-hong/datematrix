@@ -246,12 +246,12 @@ function getTerm(year: number, term_index: number): number {
 }
 
 /**
- * 中国月
+ * 中文农历月
  */
 function parseChineseMonth(isLeapYear: boolean, month: number): string {
   /**
    * '正','一','二','三','四','五','六','七','八','九','十','冬','腊'
-  */
+   */
   const chinese_month = ['\u6b63', '\u4e8c', '\u4e09', '\u56db', '\u4e94', '\u516d', '\u4e03', '\u516b', '\u4e5d', '\u5341', '\u51ac', '\u814a']
 
   return `${isLeapYear ? '\u95f0' : ''}${chinese_month[month - 1]}\u6708`
@@ -268,7 +268,7 @@ function parseChineseDate(date: number): string {
 
   /**
    * '日','一','二','三','四','五','六','七','八','九','十'
-  */
+   */
   const chinese_day = ['\u65e5', '\u4e00', '\u4e8c', '\u4e09', '\u56db', '\u4e94', '\u516d', '\u4e03', '\u516b', '\u4e5d', '\u5341']
 
   switch (date) {

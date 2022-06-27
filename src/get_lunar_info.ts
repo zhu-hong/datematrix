@@ -1,9 +1,9 @@
-import { ILunarInfo } from './types'
+import type { ILunarInfo } from './types'
 import { isLeapYear, month30day } from './util'
 
 /**
-* 年代表
-*/
+ * 年代表
+ */
 const lunarSet = [
   0x04bd8, 0x04ae0, 0x0a570, 0x054d5, 0x0d260, 0x0d950, 0x16554, 0x056a0, 0x09ad0, 0x055d2,//1900-1909
   0x04ae0, 0x0a5b6, 0x0a4d0, 0x0d250, 0x1d255, 0x0b540, 0x0d6a0, 0x0ada2, 0x095b0, 0x14977,//1910-1919
@@ -29,18 +29,18 @@ const lunarSet = [
 ]
 
 /**
-* ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸']
-*/
+ * ['甲','乙','丙','丁','戊','己','庚','辛','壬','癸']
+ */
 const tianganSet = ['\u7532', '\u4e59', '\u4e19', '\u4e01', '\u620a', '\u5df1', '\u5e9a', '\u8f9b', '\u58ec', '\u7678']
 
 /**
-* ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥']
-*/
+ * ['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥']
+ */
 const dizhiSet = ['\u5b50', '\u4e11', '\u5bc5', '\u536f', '\u8fb0', '\u5df3', '\u5348', '\u672a', '\u7533', '\u9149', '\u620c', '\u4ea5']
 
 /**
-* 二十四节气查询表
-*/
+ * 二十四节气查询表
+ */
 const termSet = [
   '9778397bd097c36b0b6fc9274c91aa', '97b6b97bd19801ec9210c965cc920e', '97bcf97c3598082c95f8c965cc920f',
   '97bd0b06bdb0722c965ce1cfcc920f', 'b027097bd097c36b0b6fc9274c91aa', '97b6b97bd19801ec9210c965cc920e',
@@ -112,13 +112,13 @@ const termSet = [
 ]
 
 /**
-* 二十四节气表
-*/
+ * 二十四节气表
+ */
 const terms = ['\u5c0f\u5bd2', '\u5927\u5bd2', '\u7acb\u6625', '\u96e8\u6c34', '\u60ca\u86f0', '\u6625\u5206', '\u6e05\u660e', '\u8c37\u96e8', '\u7acb\u590f', '\u5c0f\u6ee1', '\u8292\u79cd', '\u590f\u81f3', '\u5c0f\u6691', '\u5927\u6691', '\u7acb\u79cb', '\u5904\u6691', '\u767d\u9732', '\u79cb\u5206', '\u5bd2\u9732', '\u971c\u964d', '\u7acb\u51ac', '\u5c0f\u96ea', '\u5927\u96ea', '\u51ac\u81f3']
 
 /**
-* 公历节日
-*/
+ * 公历节日
+ */
 const festival: Record<string, string> = {
   '1-1': '元旦节',
   '5-1': '劳动节',
@@ -134,8 +134,8 @@ const festival: Record<string, string> = {
 }
 
 /**
-* 农历节日表 - 排除清明较特殊
-*/
+ * 农历节日表 - 排除清明较特殊
+ */
 const traditional_festival: Record<string, string> = {
   '12-30': '除夕',
   '1-1': '春节',
@@ -154,9 +154,9 @@ const traditional_festival: Record<string, string> = {
 }
 
 /**
-* 验证日期
-*/
-function verifyDate(year: number, month: number, date: number): boolean {
+ * 验证日期
+ */
+export function verifyDate(year: number, month: number, date: number): boolean {
   if (year < 1990 || year > 2100) return false
   if (month < 1 || month > 12) return false
   if (date < 1 || date > 31) return false
@@ -171,8 +171,8 @@ function verifyDate(year: number, month: number, date: number): boolean {
 }
 
 /**
-* 获取农历年对应的总天数
-*/
+ * 获取农历年对应的总天数
+ */
 function getLunarYearDays(year: number): number {
   let sum = 348
 
@@ -184,15 +184,15 @@ function getLunarYearDays(year: number): number {
 }
 
 /**
-* 判断是否有闰月 - 第13个月
-*/
+ * 判断是否有闰月 - 第13个月
+ */
 function hasLeapMonth(year: number): number {
   return lunarSet[year - 1900] & 0xf
 }
 
 /**
-* 获取农历对应年的闰月天数
-*/
+ * 获取农历对应年的闰月天数
+ */
 function getLeapMonthDay(year: number): number {
   if (hasLeapMonth(year)) {
     return (lunarSet[year - 1900] & 0x10000) ? 30 : 29
@@ -201,15 +201,15 @@ function getLeapMonthDay(year: number): number {
 }
 
 /**
-* 农历普通月天数
-*/
+ * 农历普通月天数
+ */
 function getBasicMonthDay(year: number, month: number): number {
   return (lunarSet[year - 1900] & (0x10000 >> month)) ? 30 : 29
 }
 
 /**
-* 农历年转换为干支纪年
-*/
+ * 农历年转换为干支纪年
+ */
 function parseGanZhiYear(year: number): string {
   let ganKey = (year - 3) % 10
   let zhiKey = (year - 3) % 12
@@ -220,15 +220,15 @@ function parseGanZhiYear(year: number): string {
 }
 
 /**
-* 解析为干支名称
-*/
+ * 解析为干支名称
+ */
 function parseGanZhi(offset: number): string {
   return `${tianganSet[offset % 10]}${dizhiSet[offset % 12]}`
 }
 
 /**
-* 获取节气名称
-*/
+ * 获取节气名称
+ */
 function getTerm(year: number, term_index: number): number {
   const _term = termSet[year - 1900]
   const _calcDay: string[] = []
@@ -246,8 +246,8 @@ function getTerm(year: number, term_index: number): number {
 }
 
 /**
-* 中国月
-*/
+ * 中国月
+ */
 function parseChineseMonth(isLeapYear: boolean, month: number): string {
   /**
    * '正','一','二','三','四','五','六','七','八','九','十','冬','腊'
@@ -258,8 +258,8 @@ function parseChineseMonth(isLeapYear: boolean, month: number): string {
 }
 
 /**
-* 转为中文日期
-*/
+ * 转为中文日期
+ */
 function parseChineseDate(date: number): string {
   /**
    * '初','十','廿','卅'
@@ -284,8 +284,8 @@ function parseChineseDate(date: number): string {
 }
 
 /**
-* 星座
-*/
+ * 星座
+ */
 function parseAstro(month: number, date: number): string {
   const astros = '\u9b54\u7faf\u6c34\u74f6\u53cc\u9c7c\u767d\u7f8a\u91d1\u725b\u53cc\u5b50\u5de8\u87f9\u72ee\u5b50\u5904\u5973\u5929\u79e4\u5929\u874e\u5c04\u624b\u9b54\u7faf'
   const flags = [20, 19, 21, 21, 21, 22, 23, 23, 23, 23, 22, 22]
@@ -294,8 +294,8 @@ function parseAstro(month: number, date: number): string {
 }
 
 /**
-* 生肖
-*/
+ * 生肖
+ */
 function parseZodiac(year: number): string {
   const zodiacSet: string[] = ['\u9f20', '\u725b', '\u864e', '\u5154', '\u9f99', '\u86c7', '\u9a6c', '\u7f8a', '\u7334', '\u9e21', '\u72d7', '\u732a']
   return zodiacSet[(year - 4) % 12]
@@ -304,61 +304,61 @@ function parseZodiac(year: number): string {
 export function getLunarInfo(year: number, month: number, date: number): ILunarInfo {
   /**
    * 验证时间
-  */
+   */
   if (!verifyDate(year, month, date)) throw Error('this date is not validate')
 
   /**
    * 矫正时区时间差
-  */
+   */
   let offset: number = (Date.UTC(year, month - 1, date) - Date.UTC(1900, 0, 31)) / 86400000
 
-  let i: number
+  let channl: number
   let temp = 0
 
-  for (i = 1900; i < 2101 && offset > 0; i++) {
-    temp = getLunarYearDays(i)
+  for (channl = 1900; channl < 2101 && offset > 0; channl++) {
+    temp = getLunarYearDays(channl)
     offset -= temp
   }
   if (offset < 0) {
     offset += temp
-    i--
+    channl--
   }
 
-  const lunarYear = i
+  const lunarYear = channl
   let leap = hasLeapMonth(lunarYear)
   let isLeapYear: boolean = false
 
-  for (i = 1; i < 13 && offset > 0; i++) {
+  for (channl = 1; channl < 13 && offset > 0; channl++) {
     //闰月
-    if (leap > 0 && i === (leap + 1) && isLeapYear === false) {
-      --i
+    if (leap > 0 && channl === (leap + 1) && isLeapYear === false) {
+      --channl
       isLeapYear = true
       temp = getLeapMonthDay(year) // 闰月天数
     } else {
-      temp = getBasicMonthDay(year, i) // 非闰月天数
+      temp = getBasicMonthDay(year, channl) // 非闰月天数
     }
     //解除闰月
-    if (isLeapYear === true && i === (leap + 1)) {
+    if (isLeapYear === true && channl === (leap + 1)) {
       isLeapYear = false
     }
     offset -= temp
   }
 
   // 闰月导致数组下标重叠取反
-  if (offset === 0 && leap > 0 && i === leap + 1) {
+  if (offset === 0 && leap > 0 && channl === leap + 1) {
     if (isLeapYear) {
       isLeapYear = false
     } else {
       isLeapYear = true
-      --i
+      --channl
     }
   }
   if (offset < 0) {
     offset += temp
-    --i
+    --channl
   }
 
-  const lunarMonth = i
+  const lunarMonth = channl
   const lunarDay = offset + 1
 
   // 节气

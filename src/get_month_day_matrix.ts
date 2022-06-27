@@ -1,5 +1,4 @@
 import { isLeapYear, month30day, month31day } from './util'
-import { getLunarInfo } from './get_lunar_info'
 import type { IDateItem, MonthDayEnum } from './types'
 
 function getMonthTotalDay(year: number, month: number): MonthDayEnum {
@@ -16,7 +15,7 @@ function getMonthTotalDay(year: number, month: number): MonthDayEnum {
   }
 }
 
-function getMonthDaysArr(year: number, month: number): IDateItem[][] {
+function getMonthDaysArr(year: number, month: number, week_startday_use_monday: boolean): IDateItem[][] {
   let totalDay = getMonthTotalDay(year, month)
 
   let daysArr: IDateItem[][] = [
@@ -36,9 +35,13 @@ function getMonthDaysArr(year: number, month: number): IDateItem[][] {
 
   let curDayLevel: number = 0
   for (let day = 0; day < totalDay; day++) {
-    const curDateDay = new Date(year, month - 1, day + 1).getDay()
+    let curDateDay = new Date(year, month - 1, day + 1).getDay()
 
     const date = day + 1
+
+    if(week_startday_use_monday) {
+      curDateDay = [6, 0, 1, 2, 3, 4, 5][curDateDay]
+    }
 
     daysArr[curDayLevel][curDateDay] = {
       year,
@@ -56,36 +59,36 @@ function getMonthDaysArr(year: number, month: number): IDateItem[][] {
   return daysArr
 }
 
-function getPrevMonthFillDays(year: number, month: number, length: number): IDateItem[] {
+function getPrevMonthFillDays(year: number, month: number, length: number, week_startday_use_monday: boolean): IDateItem[] {
   let prevMonth = month - 1
   if (prevMonth === 0) {
     prevMonth = 12
     year--
   }
 
-  const prevMonthDaysArr = getMonthDaysArr(year, prevMonth).flat().filter((d) => d !== null)
+  const prevMonthDaysArr = getMonthDaysArr(year, prevMonth, week_startday_use_monday).flat().filter((d) => d !== null)
   return prevMonthDaysArr.map((date) => {
     date.inOtherMonth = true
     return date
   }).slice(prevMonthDaysArr.length - length)
 }
 
-function getNextMonthFillDays(year: number, month: number, length: number): IDateItem[] {
+function getNextMonthFillDays(year: number, month: number, length: number, week_startday_use_monday: boolean): IDateItem[] {
   let nextMonth = month + 1
   if (nextMonth > 12) {
     nextMonth = 1
     year++
   }
 
-  const nextMonthDaysArr = getMonthDaysArr(year, nextMonth).flat().filter((d) => d !== null)
+  const nextMonthDaysArr = getMonthDaysArr(year, nextMonth, week_startday_use_monday).flat().filter((d) => d !== null)
   return nextMonthDaysArr.map((date) => {
     date.inOtherMonth = true
     return date
   }).slice(0, length).reverse()
 }
 
-export function getMonthDayMatrix(year: number, month: number): IDateItem[][] {
-  const daysArr = getMonthDaysArr(year, month)
+export function getMonthDayMatrix(year: number, month: number, week_startday_use_monday: boolean = false): IDateItem[][] {
+  const daysArr = getMonthDaysArr(year, month, week_startday_use_monday)
 
   let beforeEmptyLength = -1
   daysArr.flat().find((d) => {
@@ -93,7 +96,7 @@ export function getMonthDayMatrix(year: number, month: number): IDateItem[][] {
     return d !== null
   })
 
-  const prevMonthFillDays = getPrevMonthFillDays(year, month, beforeEmptyLength)
+  const prevMonthFillDays = getPrevMonthFillDays(year, month, beforeEmptyLength, week_startday_use_monday)
   for (let index = 0; index < beforeEmptyLength; index++) {
     daysArr[0][index] = prevMonthFillDays[index]
   }
@@ -107,7 +110,7 @@ export function getMonthDayMatrix(year: number, month: number): IDateItem[][] {
     }
   })
 
-  const nextMonthFillDays = getNextMonthFillDays(year, month, afterEmptyLength)
+  const nextMonthFillDays = getNextMonthFillDays(year, month, afterEmptyLength, week_startday_use_monday)
   let fillNextMonthDaysLevel = daysArr.length - 1
   let fillNextMonthDaysIndex = 6
   for (let index = 0; index < afterEmptyLength; index++) {
